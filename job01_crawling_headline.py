@@ -17,13 +17,13 @@ df_titles = pd.DataFrame()
 for i in range(6):                                              # Domain use 100 ~ 105 sub_domain
     url = 'https://news.naver.com/section/10{}'. format(i)      # OR '/10%d' %i
     resp = requests.get(url)                                    # url request == HTML
-    soup = BeautifulSoup(resp.text, 'html.parser')          # Using bs4 for HTML parsing
+    soup = BeautifulSoup(resp.text, 'html.parser')                  # Using bs4 for HTML parsing
     title_tags = soup.select('.sa_text_strong')                 # '.sa_text_strong' == news headline class def name
     titles = []                                                 # Create empty list for save headline
 
     for title_tag in title_tags:                                # all headlines
         title = title_tag.text                                  # Crawling headlines
-        title = re.compile('[^가-힣 ]').sub('', title)        # Repalce all to 'null' execpt "가 ~ 힣" && " "
+        title = re.compile('[^가-힣 ]').sub('', title)            # Repalce all to 'null' execpt "가 ~ 힣" && " "
         titles.append(title)
 
     df_section_titles = pd.DataFrame(titles, columns = ['titles'])  # Create columns 'titles'
