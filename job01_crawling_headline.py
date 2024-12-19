@@ -1,5 +1,7 @@
 # 241218 intel AISW Academy
 #
+# 사이트의 HTML에서 뉴스 헤드라인만 추출헤 csv 파일을 생성하는 코드
+
 
 from bs4 import BeautifulSoup
 import requests
@@ -14,7 +16,7 @@ category = ['Politics', 'Economic', 'Social', 'Culture', 'World', 'IT']
 df_titles = pd.DataFrame()
 
 # Get headlines
-for i in range(6):                                              # Domain use 100 ~ 105 sub_domain
+for i in range(6):                                              # Sub_domain : 100 ~ 105
     url = 'https://news.naver.com/section/10{}'. format(i)      # OR '/10%d' %i
     resp = requests.get(url)                                    # url request == HTML
     soup = BeautifulSoup(resp.text, 'html.parser')                  # Using bs4 for HTML parsing
