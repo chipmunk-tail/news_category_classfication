@@ -61,7 +61,7 @@ for i in range(6):
 
             try:
                 title = driver.find_element(By.XPATH, title_xpath).text
-                title = re.compile('[^가-힣 ]').sub('', title)        # Repalce all to 'null' execpt "가 ~ 힣" && " "
+                title = re.compile('[^가-힣 ]').sub(' ', title)        # Repalce all to 'null' execpt "가 ~ 힣" && " "
                 titles.append(title)
 
                 print(title)
