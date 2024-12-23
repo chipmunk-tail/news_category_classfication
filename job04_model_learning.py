@@ -12,21 +12,21 @@ from keras.layers import *
 # from keras.layers import Dense, Embedding, Conv1D, MaxPool1D, LSTM, Dropout, Flatten
 
 
-
-X_train = np.load('./crawling_data/news_data_X_train_max_16_wordsize_6436.npy', allow_pickle = True)
-X_test = np.load('./crawling_data/news_data_X_test_max_16_wordsize_6436.npy', allow_pickle = True)
-Y_train = np.load('./crawling_data/news_data_Y_train_max_16_wordsize_6436.npy', allow_pickle = True)
-Y_test = np.load('./crawling_data/news_data_Y_test_max_16_wordsize_6436.npy', allow_pickle = True)
+# Load train
+X_train = np.load('train_data/news_data_X_train_wordsize_6436.npy', allow_pickle = True)
+X_test = np.load('train_data/news_data_X_test_wordsize_6436.npy', allow_pickle = True)
+Y_train = np.load('train_data/news_data_Y_train_wordsize_6436.npy', allow_pickle = True)
+Y_test = np.load('train_data/news_data_Y_test_wordsize_6436.npy', allow_pickle = True)
 
 print(X_train.shape, Y_train.shape)
 print(X_test.shape, Y_test.shape)
 
 
 model = Sequential()
-model.add(Embedding(6436, 300, input_length = 16))
+model.add(Embedding(6436, 300))                                                 # makes token to vector
 model.build(input_shape = (None, 16))
 model.add(Conv1D(32, kernel_size = 5, padding = 'same', activation = 'relu'))
-model.add(MaxPool1D(pool_size = 1))
+model.add(MaxPool1D(pool_size = 1))                                             # not working but Conv & MaxPool
 model.add(LSTM(128, activation = 'tanh', return_sequences = True))
 model.add(Dropout(0.3))
 model.add(LSTM(64, activation = 'tanh', return_sequences = True))

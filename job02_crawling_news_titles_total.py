@@ -17,24 +17,28 @@ import re
 import time
 import datetime
 
+
 # News Category
 category = ['Politics', 'Economic', 'Social', 'Culture', 'World', 'IT']
 
-# Create a DataFrame
+
+# Create a empty DataFrame
 df_titles = pd.DataFrame()
 
-# Setting
+
+# Web driver setting
 options = ChromeOptions()
 user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'
 options.add_argument('user_agent=' + user_agent)
 options.add_argument('lang=ko_KR')
+
 
 # Webdriver setting
 service = ChromeService(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service = service, options = options)
 
 
-# Target domain 100 ~ 105
+# Data crawling
 for i in range(6):
     url = 'https://news.naver.com/section/10{}'.format(i)
     driver.get(url)
@@ -80,7 +84,7 @@ driver.close()                                                 # close browser
 print(df_titles.head())
 df_titles.info()
 print(df_titles['category'].value_counts())
-df_titles.to_csv('./crawling_data/naver_headline_news_exam_{}.csv'.format(
+df_titles.to_csv('./crawling_data_train/naver_headline_news_total_{}.csv'.format(
     datetime.datetime.now().strftime('%Y%m%d')), index = False) # Change time format to 'YYYYMMDD'
                                                                 # index = False == 0, 1, 2 default index = False
 

@@ -14,8 +14,8 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
-# open CSV
-df = pd.read_csv('./crawling_data/naver_headline_news_result_20241220.csv')
+# Open CSV
+df = pd.read_csv('crawling_data_train/naver_headline_news_total_20241220.csv')
 df.drop_duplicates(inplace = True)                          # Remove duplicate
 df.reset_index(drop = True, inplace = True)                 # Drop default index
 print(df.head())
@@ -39,7 +39,7 @@ print(label)
 
 
 # save encoder
-with open('./models/encoder.pickle', 'wb') as f:            # wb = write binary
+with open('format_files/encoder.pickle', 'wb') as f:            # wb = write binary
     pickle.dump(encoder, f)
 
 
@@ -56,24 +56,24 @@ for i in range(len(X)):
 print(X)
 
 
-# open korean stopword
-stopwords = pd.read_csv('./crawling_data/stopwords.csv', index_col = 0)
+# Open korean stopword
+stopwords = pd.read_csv('format_files/stopwords.csv', index_col = 0)
 print(stopwords)
 
 
-# replace stopword to ' '
+# Replace stopword to ' '
 for sentence in range(len(X)):
     words = []
     for word in range(len(X[sentence])):
-        if len(X[sentence][word]) > 1:
+        if len(X[sentence][word]) > 1:              # drop useless word
             if X[sentence][word] not in list(stopwords['stopword']):
                 words.append(X[sentence][word])
     X[sentence] = ' '.join(words)
 print(X[:5])
 
 
-
-token = Tokenizer()
+#
+token = Tokenizer()                                 # labeling natural language
 token.fit_on_texts(X)
 tokened_X = token.texts_to_sequences(X)
 wordsize = len(token.word_index) + 1                # max length + ' '
@@ -94,14 +94,21 @@ print(X_pad)
 print(len(X_pad[0]))
 
 
+#
 X_train, X_test, Y_train, Y_test = train_test_split(X_pad, onehot_Y, test_size = 0.1)
 print(X_train.shape, Y_train.shape)
 print(X_test.shape, Y_test.shape)
 
-np.save('./crawling_data/news_data_X_train_max_{}_wordsize_{}'.format(max, wordsize), X_train)      # .npy
-np.save('./crawling_data/news_data_X_test_max_{}_wordsize_{}'.format(max, wordsize), X_test)
-np.save('./crawling_data/news_data_Y_train_max_{}_wordsize_{}'.format(max, wordsize), Y_train)
-np.save('./crawling_data/news_data_Y_test_max_{}_wordsize_{}'.format(max, wordsize), Y_test)
+
+# Save token
+with open('./models/news_token_max_{}.pickle'.format(max), 'wb') as f:
+    pickle.dump(token, f)
+
+# Save
+np.save('./crawling_data/news_data_X_train_wordsize_{}_max_{}'.format(wordsize, max), X_train)      # .npy
+np.save('./crawling_data/news_data_X_test_wordsize_{}_max_{}'.format(wordsize, max), X_test)
+np.save('./crawling_data/news_data_Y_train_wordsize_{}_max{}'.format(wordsize, max), Y_train)
+np.save('./crawling_data/news_data_Y_test_wordsize_{}_max_{}'.format(wordsize, max), Y_test)
 
 
 
